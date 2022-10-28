@@ -20,6 +20,8 @@ use crate::{
     BinaryOpKind, BlockArgument,
 };
 
+use snailquote::escape;
+
 #[derive(Debug)]
 enum Doc {
     Empty,
@@ -980,7 +982,7 @@ impl MetadataNamer {
                         .get(idx)
                         .unwrap_or_else(|| panic!("Metadata index ({idx:?}) not found in namer."))
                 ),
-                Metadatum::String(s) => format!("{s:?}"),
+                Metadatum::String(s) => escape(s).to_string(),
                 Metadatum::Struct(tag, els) => {
                     format!(
                         "{tag} {}",

@@ -530,7 +530,9 @@ mod ir_builder {
                     IrMetadatum::Index(idx)
                 }
                 / ['"'] s:$(([^ '"' | '\\'] / ['\\'] ['\\' | '"' ])+) ['"'] __ {
-                    IrMetadatum::String(s.to_owned())
+                    use snailquote::unescape;
+                    let quoted_string = format!("\"{s}\"");
+                    IrMetadatum::String(unescape(&quoted_string).expect("failed to unescape metadata"))
                 }
                 / tag:$(id_char0() id_char()*) __ els:metadata_item()* {
                     IrMetadatum::Struct(tag.to_owned(), els)
