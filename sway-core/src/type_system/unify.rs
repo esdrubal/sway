@@ -52,6 +52,13 @@ pub(super) fn unify(
             arguments_are_flipped,
             type_engine,
         ),
+        // Let empty enums to coerce to any other type. This is useful for Never enum.
+        (
+            Enum {
+                variant_types: rvs, ..
+            },
+            _,
+        ) if rvs.is_empty() => (vec![], vec![]),
         (Tuple(rfs), Tuple(efs)) if rfs.len() == efs.len() => {
             unify::unify_tuples(help_text, rfs, efs, curried)
         }
@@ -327,6 +334,13 @@ pub(super) fn unify_right(
             false,
             type_engine,
         ),
+        // Let empty enums to coerce to any other type. This is useful for Never enum.
+        (
+            Enum {
+                variant_types: rvs, ..
+            },
+            _,
+        ) if rvs.is_empty() => (vec![], vec![]),
         (Tuple(rfs), Tuple(efs)) if rfs.len() == efs.len() => {
             unify::unify_tuples(help_text, rfs, efs, curried)
         }
