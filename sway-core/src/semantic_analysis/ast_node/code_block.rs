@@ -70,13 +70,16 @@ impl ty::TyCodeBlock {
                     if let Some(ty::TyDeclaration::EnumDeclaration(never_decl_id)) = never_decl_opt
                     {
                         if let Ok(never_decl) = de_get_enum(never_decl_id.clone(), &span) {
-                            never_decl.create_type_id(ctx.type_engine)
-                        } else {
-                            ctx.type_engine.insert_type(TypeInfo::Unknown)
+                            return never_decl.create_type_id(ctx.type_engine);
                         }
-                    } else {
-                        ctx.type_engine.insert_type(TypeInfo::Unknown)
                     }
+
+                    errors.push(CompileError::Internal(
+                        "Could not found Never type.",
+                        span.clone(),
+                    ));
+
+                    ctx.type_engine.insert_type(TypeInfo::Unknown)
                 } else {
                     ctx.type_engine.insert_type(TypeInfo::Tuple(Vec::new()))
                 }
