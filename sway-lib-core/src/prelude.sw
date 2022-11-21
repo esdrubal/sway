@@ -6,3 +6,4 @@ library prelude;
 use ::num::*;
 use ::raw_ptr::*;
 use ::raw_slice::*;
+use ::never::*;
